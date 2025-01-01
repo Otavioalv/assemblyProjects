@@ -10,8 +10,6 @@ macro seek(variable offset) {
 
 include "snes-header.asm" // Include Header & Vector Table
 
-
-
  
     // Quando o Status Register esta como o valor 0, significa que e (16 bits)
     // Se ficar com o valor 1, significa que e (8 bits)
@@ -28,6 +26,10 @@ include "snes-header.asm" // Include Header & Vector Table
     // as flags que controlam os bits, sao as flags M e X
     // M -> controla o registradot A
     // X -> controla os registradores X e Y
+
+    // # -> significa imediato
+    // $ -> significa exadecimal
+    // b -> significa binario
 
 seek($8000)
     clc
@@ -65,6 +67,13 @@ seek($8000)
     rep #$10
 
     // Full 16 bits
+
+    // O registrador a tem 2 lados, A e B
+    // cada lado tem 8 bits, juntando os dois,
+    // ele se torna o C que e 16 bits
+    // XBA, troca os lados dos, o A fica no B 
+    // e vice-versa
+
     lda #$1234
     xba 
 
