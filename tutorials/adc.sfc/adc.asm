@@ -7,24 +7,23 @@ macro seek(variable offset) {
 }
 
 
-/* 
-  soma 
-  A = 1
-  n = 1
-  C = 1
 
-  soma = A + n + C
-  exp: 
-    1 + 1 + 1 = 3
-    1 + 1 + 0 = 2
-  (necessario zerar a flag C)
+//  soma 
+//  A = 1
+//  n = 1
+//  C = 1
 
-  subtração
-  sub = A - n + C - 1
-    6 - 2 + 1 - 1 = 4
-    6 - 2 + 0 - 1 = 3
-  (necessario adicionar a flag C)
-*/
+//  soma = A + n + C
+//  exp: 
+//    1 + 1 + 1 = 3
+//    1 + 1 + 0 = 2
+//  (necessario zerar a flag C)
+
+//  subtração
+//  sub = A - n + C - 1
+//    6 - 2 + 1 - 1 = 4
+//    6 - 2 + 0 - 1 = 3
+//  (necessario adicionar a flag C)
 
 
 include "snes-header.asm" // Cabeçalho do snes

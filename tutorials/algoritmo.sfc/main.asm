@@ -9,39 +9,71 @@ macro seek(variable offset) {
   base offset
 }
 
-include "snes-header.asm" // Include Header & Vector Table
+include "snes-header.asm"   // Include Header & Vector Table
 
-constant listNumPtr =  $0010
+constant listNumPtr = $0000     // Inicion do ponteiro da lista de numeros
+constant qtdLoopPtr = $0020    // Quantidade de loopings
+constant tamListPtr = $0030    // Tamanho da lista do ponteiro
+constant findNumPtr = $0040     // Numero que quero encontrar
 
 seek($8000)
     clc
     xce
     nop
-    rep #$30  // 16 bits
-    
-    lda #listNumPtr // #: pega o valor literal que esta em listNum 
-    sta $0000 // coloca o valor de A no sta
+    rep #$30                // 16 bits
+                            //
+    lda #$001F               // #: pega o valor literal que esta em listNum 
+    sta listNumPtr          // coloca o valor de A no sta
+    tcs                     // seta o ponteiro da pilha com o valor em A
 
-    sep #$10  // X e Y 8 bits
-    ldx #$10
+    lda #$0000              // Seta o valor 0
+    sta qtdLoopPtr          // Salva 
 
-    setList:
-        clc
-        adc #$0002          // soma = 2 ao A em 16 bits
-        sta $0000           // Salva o valor de A na posição especificada na memoria RAM
+    lda #$0005              // Define q quantidade de numeros
+    sta tamListPtr          // Salva 
 
+    lda #$0030              // Define o numero que quero procurar
+    sta findNumPtr          // Salva na posição
+
+    sep #$10                // X e Y 8 bits
+    ldx #$10                // Adiciona valor inicial a X
+
+    lda qtdLoopPtr
+    setList:                //
+        cmp tamListPtr
+        beq +
+
+        phx                 // empilha o valor de X
+                            //
         txa                 // Trasfere o valor de X para A
-        adc #$0010          // Realizo a soma +10
-
+        clc                 //
+        adc #$0010          // Realizo a soma +10  
+                            //
         tax                 // Transfiro o valor atualizado de A para X
-        lda $0000           // Pego o valor do A da memoria
 
-        stx $00           // Pega o valor salvo na posição da memoria 
+        lda qtdLoopPtr
+        inc
+        sta qtdLoopPtr
+    bra setList
+    
+    +;
+
+    lda #$0000
+    sta qtdLoopPtr
+
+    searchNum:
+        cmp findNumPtr
+        beq +
+
+        lda (listNumPtr)        // pega o endereço salvo na memoria, e usa como endereço pra acessar outra memoria
         
 
-    bra setList
+        
+        lda qtdLoopPtr
+        inc
+        sta qtdLoopPtr
+    bra searchNum
 
-
-
+    +;
 -;
     bra -

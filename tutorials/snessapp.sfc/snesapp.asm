@@ -53,7 +53,7 @@ seek($8000)
 
     // Pilha PULL
     plx                     // pull X, desempilha o ultimo valor empilhado para o X
-    pla                     // pull A, desempilha o ultimo valor empilhado para o A
+    pla                     // pull A, desempilha o ultimo valor empilhado para o A 
 
 -
     bra -
