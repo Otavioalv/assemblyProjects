@@ -20,7 +20,7 @@ seek($8000)
     // Meu while
     lda #$0005
     sta energyPtr
-    
+
     whileLoop:
         cmp #0
         beq +
@@ -29,7 +29,35 @@ seek($8000)
         sta energyPtr
         lda energyPtr
 
-        bra whileLoop
+    bra whileLoop
+
+    // Meu do while loop
+    +;
+        lda #$0004
+        sta energyPtr
+
+        doWhile:
+            dec
+            sta energyPtr
+            lda energyPtr
+            
+            cmp #0
+        bne doWhile  // not equal
+    
+    // Meu for loop
+    lda #$0000
+    sta energyPtr
+
+    for:
+        cmp #5
+        beq +
+        
+        inc 
+        sta energyPtr
+        lda energyPtr
+    bra for
+
+
     +;  
         nop
         nop
