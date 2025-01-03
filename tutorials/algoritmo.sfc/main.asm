@@ -12,6 +12,7 @@ macro seek(variable offset) {
 include "snes-header.asm"   // Include Header & Vector Table
 
 constant listNumPtr = $0000     // Inicion do ponteiro da lista de numeros
+constant localPointPtr = $0002  // Armazena o ponteiro (flag S)
 constant qtdLoopPtr = $0020    // Quantidade de loopings
 constant tamListPtr = $0030    // Tamanho da lista do ponteiro
 constant findNumPtr = $0040     // Numero que quero encontrar
@@ -51,6 +52,9 @@ seek($8000)
                             //
         tax                 // Transfiro o valor atualizado de A para X
 
+        tsc                 // Transfere o valor de S para A
+        sta localPointPtr   // Salva
+
         lda qtdLoopPtr
         inc
         sta qtdLoopPtr
@@ -61,14 +65,18 @@ seek($8000)
     lda #$0000
     sta qtdLoopPtr
 
+
     searchNum:
+        sep #$20
+        lda (listNumPtr)        // pega o endereço salvo na memoria, e usa como endereço pra acessar outra memoria
         cmp findNumPtr
         beq +
 
-        lda (listNumPtr)        // pega o endereço salvo na memoria, e usa como endereço pra acessar outra memoria
-        
+        rep #$20
+        lda listNumPtr
+        dec
+        sta listNumPtr
 
-        
         lda qtdLoopPtr
         inc
         sta qtdLoopPtr
