@@ -17,7 +17,6 @@ include "snes-header.asm"   // Include Header & Vector Table
 
 
 constant startListPtr = $0000     // Valor do inicio da lista
-
 constant agoNumPtr = $0002      // Valor da posição anterior
 constant nextNumPtr = $0004     // Valor da proxima posição
 
@@ -25,6 +24,7 @@ constant tamListPtr = $0020     // Tamanho da lista
 constant qtdLoopPtr = $0022      // Quantidade de X do looping
 constant qtdFinalLoopPtr = $0024    // Quanjtidade final do looping
 constant swapNumPtr = $0026      // Valor para troca
+constant stopPtr = $0028        // Valor indica fim da busca
 
 seek($8000)
     clc                         // Limpa a Flag C
@@ -36,7 +36,7 @@ seek($8000)
     sta startListPtr            // Salva na memoria
     tcs                         // Transfere C(A) na flag S (pointer)
 
-    lda #$0005                    // Tamanho da lista (0) conta
+    lda #$0005                  // Tamanho da lista (0) conta
     sta tamListPtr              // Salva na memoria
 
     sep #$20
@@ -44,10 +44,10 @@ seek($8000)
     // iniciar os valores da lista
 
     // 0
-    lda #$30
+    lda #$80
     sta $001F
     // 1
-    lda #$80
+    lda #$70
     sta $001E
     // 2
     lda #$70
@@ -56,10 +56,10 @@ seek($8000)
     lda #$20
     sta $001C
     // 4
-    lda #$10
+    lda #$40
     sta $001B
     // 5
-    lda #$40
+    lda #$10
     sta $001A
     // Fim da lista
 
@@ -70,9 +70,10 @@ seek($8000)
     // Realiza o boobleSort
     rep #$20
     
-    lda #$0000                  //  Define a quantidade de loop
-    sta qtdLoopPtr              // Salva na memoria
-    sta qtdFinalLoopPtr         // salva na memoria
+    lda #$0000                  //  Define a quantidade 0
+    sta qtdLoopPtr              // Salva na memoria loop
+    sta qtdFinalLoopPtr         // salva na memoria tot loop
+    sta stopPtr                 // salva na memoria parar loop
 
     lda startListPtr            // Pega o valor do inicio da lista
     sta agoNumPtr               // Salva
@@ -96,6 +97,9 @@ seek($8000)
             lda swapNumPtr          // pega o numero anterior 
             sta (nextNumPtr)        // Salva na poxisão posterior
 
+            rep #$20                // A(C) em 16 bits
+            lda #$0001              // define 1
+            sta stopPtr             // salva na pos
         +;
         rep #$20                    // Coloca A(C) em 16 bsits
         
@@ -121,11 +125,22 @@ seek($8000)
 
             dec                         // Decrementa A
             sta nextNumPtr              // Salva
+
+            // se stopPtr e 1 ele continua, se for 0 ele sai
+            lda stopPtr                 // Pega o valor 
+            cmp #$0000                  // Compara o valor com 0
+            beq endProgram              // se for igual, 0, ele sai do looping
+
+            lda #$0000                  // define 0
+            sta qtdLoopPtr              // Salva na memoria
+            sta stopPtr                 // Salva na memoria
         +;
+
+
     bra bubbleSort
 
-
-    -;
-        bra -
+    endProgram: 
+        -;
+            bra -
 
 
