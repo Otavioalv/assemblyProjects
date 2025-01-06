@@ -11,11 +11,6 @@ include "snes-header.asm"   // Include Header & Vector Table
 
 
 
-
-
-
-
-
 constant startListPtr = $0000     // Valor do inicio da lista
 constant agoNumPtr = $0002      // Valor da posição anterior
 constant nextNumPtr = $0004     // Valor da proxima posição
@@ -44,7 +39,7 @@ seek($8000)
     // iniciar os valores da lista
 
     // 0
-    lda #$80
+    lda #$10
     sta $001F
     // 1
     lda #$70
@@ -59,12 +54,9 @@ seek($8000)
     lda #$40
     sta $001B
     // 5
-    lda #$10
+    lda #$80
     sta $001A
     // Fim da lista
-
-
-    
 
 
     // Realiza o boobleSort
@@ -126,7 +118,7 @@ seek($8000)
             dec                         // Decrementa A
             sta nextNumPtr              // Salva
 
-            // se stopPtr e 1 ele continua, se for 0 ele sai
+          
             lda stopPtr                 // Pega o valor 
             cmp #$0000                  // Compara o valor com 0
             beq endProgram              // se for igual, 0, ele sai do looping
